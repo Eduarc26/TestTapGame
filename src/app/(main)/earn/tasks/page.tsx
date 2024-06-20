@@ -1,4 +1,4 @@
-import getTasks from "@/actions/get-tasks";
+export const dynamic = "force-dynamic";
 import BackButton from "@/components/common/back-button";
 import TopNavigation from "@/components/common/earn/top-navigation";
 import ErrorPage from "@/components/common/error-page";

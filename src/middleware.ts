@@ -8,9 +8,9 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/", request.url));
   if (request.url.includes("/app/desktop") && !mobile)
     return NextResponse.next();
-  // if (!mobile) {
-  // return NextResponse.redirect(new URL("/app/desktop", request.url));
-  // }
+  if (!mobile) {
+    return NextResponse.redirect(new URL("/app/desktop", request.url));
+  }
   return NextResponse.next();
 }
 

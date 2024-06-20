@@ -17,7 +17,7 @@ export default function BackButton() {
       router.push("/");
       webApp.BackButton.hide();
     });
-  }, [webApp, router]);
+  }, [webApp, router, playBackAudio]);
 
   return <></>;
 }

@@ -81,7 +81,7 @@ export default function BackgroundGradient() {
   return (
     <AnimatePresence>
       <motion.div
-        className="gradient-bg h-screen -z-10 w-full absolute left-0 top-[10%]"
+        className="gradient-bg h-screen -z-10 w-full absolute left-0 top-[12%]"
         key={gradientState}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

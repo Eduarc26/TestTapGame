@@ -14,7 +14,7 @@ export default function ClickProgress() {
     <div
       className="mt-12 px-6 fixed bg-transparent left-0 z-50 w-full -translate-y-[168px] pt-2"
       style={{
-        top: webApp.viewportStableHeight,
+        top: webApp.viewportHeight,
       }}
     >
       <div className="flex gap-10 items-center">

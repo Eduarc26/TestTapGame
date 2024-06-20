@@ -47,7 +47,28 @@ export default function InviteFriendsButton() {
         webApp.MainButton.hide();
       };
     }
-  }, [webApp, user]);
+  }, [webApp, user, playMenuAudio]);
+
+  useEffect(() => {
+    const overflow = 100;
+    if (open) {
+      document.body.style.marginTop = "";
+      document.body.style.height = "";
+      document.body.style.paddingBottom = "";
+    } else {
+      document.body.style.marginTop = `${overflow}px`;
+      document.body.style.height = window.innerHeight + overflow + "px";
+      document.body.style.paddingBottom = `${overflow}px`;
+      window.scrollTo(0, overflow);
+    }
+
+    return () => {
+      // Очистка стилей при размонтировании
+      document.body.style.marginTop = "";
+      document.body.style.height = "";
+      document.body.style.paddingBottom = "";
+    };
+  }, [open]);
 
   if (!user || !webApp?.viewportHeight) return;
 
@@ -109,21 +130,5 @@ export default function InviteFriendsButton() {
         </SheetContent>
       </Sheet>
     </>
-  );
-}
-
-function ProfileForm({ className }: React.ComponentProps<"form">) {
-  return (
-    <form className={cn("grid items-start gap-4", className)}>
-      <div className="grid gap-2">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" defaultValue="shadcn@example.com" />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="username">Username</Label>
-        <Input id="username" defaultValue="@shadcn" />
-      </div>
-      <Button type="submit">Save changes</Button>
-    </form>
   );
 }
