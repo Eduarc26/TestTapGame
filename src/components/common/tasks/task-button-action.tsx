@@ -3,13 +3,14 @@ import { useTelegram } from "@/components/providers/telegram-provider";
 import { Task } from "@/lib/types";
 import { BadgeCheck } from "lucide-react";
 import useTask from "@/hooks/use-task";
+import { useSounds } from "@/hooks/use-sounds";
 
 interface TaskButtonActionProps extends Task {}
 
 export default function TaskButtonAction(task: TaskButtonActionProps) {
   const { taskStatus, setTaskClaiming, setTaskCompleted } = useTask(task);
   const { webApp } = useTelegram();
-
+  const { playMenuAudio } = useSounds();
   if (!webApp) return;
   if (taskStatus === "none") return;
 
@@ -18,6 +19,7 @@ export default function TaskButtonAction(task: TaskButtonActionProps) {
       {taskStatus === "open" && (
         <button
           onClick={() => {
+            playMenuAudio();
             webApp.openLink(task.link);
             setTaskClaiming(task.id);
           }}

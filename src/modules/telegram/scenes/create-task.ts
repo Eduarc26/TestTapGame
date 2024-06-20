@@ -2,6 +2,7 @@ import { Scenes } from "telegraf";
 import { BotContext } from "../types";
 import createTask from "@/actions/create-task";
 import { generateRandomNumber } from "@/lib/utils";
+import { subscribe } from "diagnostics_channel";
 
 const createTaskScene = new Scenes.BaseScene<BotContext>("createTask");
 const currency = process.env.NEXT_PUBLIC_CURRENCY;
@@ -54,19 +55,28 @@ createTaskScene.on("text", async (ctx) => {
     case 2:
       ctx.session.createTask.logoUrl = ctx.message.text;
       await ctx.reply(
-        "<b>Напишите количество гемов за выполнение</b>\n\nНапример: 150",
+        "<b>Обязательная подписка на Телеграм канал?</b>\n\n<b>Введите юзернейм канала: @example_channle\nЧтобы пропустить введите</b> <code>-</code>",
         {
           parse_mode: "HTML",
         }
       );
       break;
     case 3:
+      ctx.session.createTask.subscribe = ctx.message.text;
+      await ctx.reply(
+        "<b>Напишите количество гемов за выполнение</b>\n\nНапример: 150",
+        {
+          parse_mode: "HTML",
+        }
+      );
+      break;
+    case 4:
       ctx.session.createTask.reward = ctx.message.text;
       await ctx.reply("<b>Отправьте ссылку для перехода</b>", {
         parse_mode: "HTML",
       });
       break;
-    case 4:
+    case 5:
       ctx.session.createTask.link = ctx.message.text;
       await ctx.reply("<b>Задание от партнера?</b>", {
         parse_mode: "HTML",
@@ -94,6 +104,7 @@ createTaskScene.action("partner_yes", async (ctx) => {
   ctx.session.createTask!.partner = true;
   const title = ctx.session.createTask?.title;
   const description = ctx.session.createTask?.description;
+  const subscribe = ctx.session.createTask?.subscribe;
   const amount = ctx.session.createTask?.reward;
   const logo = ctx.session.createTask?.logoUrl;
   const link = ctx.session.createTask?.link;
@@ -117,7 +128,9 @@ createTaskScene.action("partner_yes", async (ctx) => {
   const links = `<a href="${logo}">Логотип</a> | <a href="${link}">Переход</a>`;
   const amountMessage = `<b>Награда:</b> <code>${amount} ${currency}</code>`;
   const partnerMessage = `<b>Задание от партнера:</b> <code>Да</code>`;
-  const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${partnerMessage}\n\n${links}`;
+  const subscribeMessage = `<b>Проверка подписки:</b> <code>${subscribe}</code>`;
+  console.log(subscribe);
+  const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${subscribeMessage}\n${partnerMessage}\n\n${links}`;
   await ctx.reply(message, {
     parse_mode: "HTML",
     reply_markup: {
@@ -143,6 +156,7 @@ createTaskScene.action("partner_no", async (ctx) => {
   const title = ctx.session.createTask?.title;
   const description = ctx.session.createTask?.description;
   const amount = ctx.session.createTask?.reward;
+  const subscribe = ctx.session.createTask?.subscribe;
   const logo = ctx.session.createTask?.logoUrl;
   const link = ctx.session.createTask?.link;
   if (isNaN(Number(amount))) {
@@ -165,7 +179,9 @@ createTaskScene.action("partner_no", async (ctx) => {
   const links = `<a href="${logo}">Логотип</a> | <a href="${link}">Переход</a>`;
   const amountMessage = `<b>Награда:</b> <code>${amount} ${currency}</code>`;
   const partnerMessage = `<b>Задание от партнера:</b> <code>Да</code>`;
-  const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${partnerMessage}\n\n${links}`;
+  const subscribeMessage = `<b>Проверка подписки:</b> <code>${subscribe}</code>`;
+  console.log(subscribe);
+  const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${subscribeMessage}\n${partnerMessage}\n\n${links}`;
   await ctx.reply(message, {
     parse_mode: "HTML",
     reply_markup: {
@@ -192,6 +208,7 @@ createTaskScene.action("create-task", async (ctx) => {
   const amount = ctx.session.createTask?.reward;
   const logo = ctx.session.createTask?.logoUrl;
   const link = ctx.session.createTask?.link;
+  const subscribe = ctx.session.createTask?.subscribe;
   const partner = ctx.session.createTask?.partner;
   const id = generateRandomNumber(6);
   const createdTask = await createTask({
@@ -203,6 +220,7 @@ createTaskScene.action("create-task", async (ctx) => {
     partner: !!partner,
     password: "123451",
     title: title!,
+    subscribe: subscribe,
   });
   if (!createdTask) {
     await ctx.reply("<b>Произошла ошибка при создании задания</b>", {
@@ -214,6 +232,7 @@ createTaskScene.action("create-task", async (ctx) => {
   await ctx.reply(`<b>Задание <code>${id}</code> успешно создано!</b>`, {
     parse_mode: "HTML",
   });
+  await ctx.scene.leave();
 });
 createTaskScene.action("cancel-task", async (ctx) => {
   ctx.answerCbQuery("");

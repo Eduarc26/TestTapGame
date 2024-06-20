@@ -52,9 +52,11 @@ bot.command("test", async (ctx) => {
 bot.on("sticker", async (ctx) => await ctx.reply("👍"));
 bot.hears("hi", async (ctx) => await ctx.reply("Hey there"));
 
-export default async function botRun() {
+export async function botRun() {
   if (botLaunched) return;
   botLaunched = true;
   connectToMongoDB();
   await bot.launch();
 }
+
+export default bot;

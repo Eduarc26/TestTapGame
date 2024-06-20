@@ -144,4 +144,5 @@ export interface Task {
   status: TaskStatus;
   amount: number;
   partner: boolean;
+  subscribe: string | undefined;
 }

@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function NotFound() {
   return (
-    <div className="bg-black h-screen grid place-items-center">
+    <div className="bg-background h-screen grid place-items-center">
       <div>
         <h1 className="text-2xl font-bold text-center">
           Oops, page deleted <br />

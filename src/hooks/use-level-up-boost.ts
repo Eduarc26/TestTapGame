@@ -2,6 +2,7 @@ import User from "@/dto/user";
 import useUserStore from "@/storage/user-store";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useSounds } from "./use-sounds";
 
 interface UseLevelUpBoostProps {
   id: number;
@@ -10,11 +11,11 @@ interface UseLevelUpBoostProps {
 export default function useLevelUpBoost({ id, type }: UseLevelUpBoostProps) {
   const [disabled, setDisabled] = useState(false);
   const { updateUser } = useUserStore();
+  const { playUnlockPowerAudio } = useSounds();
 
   const triggerBoost = async () => {
     try {
       setDisabled(true);
-      console.log(id, type);
       const result = await User.applyBoost(id, "level-up", type);
       if (!result.success || !result.data) {
         toast.error("Что то пошло не так, повторите попытку позже");
@@ -22,6 +23,7 @@ export default function useLevelUpBoost({ id, type }: UseLevelUpBoostProps) {
         return;
       }
       updateUser(result.data);
+      playUnlockPowerAudio();
       toast.success("Буст успешно добавлен");
       setDisabled(false);
     } catch (error) {

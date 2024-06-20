@@ -1,6 +1,5 @@
 "use client";
 import { PropsWithChildren, useEffect } from "react";
-import AwaiterStyles from "@/styles/awaiter.module.scss";
 import { useTelegram } from "./telegram-provider";
 
 export default function ScrollPreventer({ children }: PropsWithChildren) {
@@ -10,9 +9,9 @@ export default function ScrollPreventer({ children }: PropsWithChildren) {
     webApp.expand();
     const overflow = 100;
     document.body.style.overflowY = "hidden";
-    document.body.style.marginTop = `${overflow}px`;
-    document.body.style.height = window.innerHeight + overflow + "px";
-    document.body.style.paddingBottom = `${overflow}px`;
+    // document.body.style.marginTop = `${overflow}px`;
+    // document.body.style.height = window.innerHeight + overflow + "px";
+    // document.body.style.paddingBottom = `${overflow}px`;
     window.scrollTo(0, overflow);
 
     let ts: number | undefined;
@@ -48,7 +47,7 @@ export default function ScrollPreventer({ children }: PropsWithChildren) {
   return (
     <div
       id="app-scrollable"
-      className="bg-black"
+      className="bg-transparent"
       style={{ overflowY: "auto", height: "100vh" }}
     >
       {children}

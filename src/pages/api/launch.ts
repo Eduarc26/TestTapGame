@@ -1,4 +1,4 @@
-import botRun from "@/modules/telegram/launch";
+import { botRun } from "@/modules/telegram/launch";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 let botLaunched = false;

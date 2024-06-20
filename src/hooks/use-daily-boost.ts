@@ -2,6 +2,7 @@ import User from "@/dto/user";
 import useUserStore from "@/storage/user-store";
 import React, { useState } from "react";
 import { toast } from "sonner";
+import { useSounds } from "./use-sounds";
 
 interface IuseDailyBoostProps {
   type: string;
@@ -10,8 +11,10 @@ interface IuseDailyBoostProps {
 
 export default function useDailyBoost({ type, id }: IuseDailyBoostProps) {
   const [disabled, setDisabled] = useState(false);
+  const { playUnlockPowerAudio } = useSounds();
   const { updateUserClicksleft, user, updateUser } = useUserStore();
   const setMaxEnergy = () => {
+    playUnlockPowerAudio();
     updateUserClicksleft(user!.clickLimit);
     toast.success("Энергия успешно восстановлена");
   };

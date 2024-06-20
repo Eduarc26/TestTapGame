@@ -1,5 +1,7 @@
 import { getReferalsInfoById } from "@/actions/get-referals-info";
+import AudioButton from "@/components/common/audio-button";
 import BackButton from "@/components/common/back-button";
+import { DrawerDialogDemo } from "@/components/common/demo-drawer";
 import TopNavigation from "@/components/common/earn/top-navigation";
 import ErrorPage from "@/components/common/error-page";
 import ClaimBonus from "@/components/common/friends/claim-bonus";
@@ -90,6 +92,7 @@ export default async function EarnPage({ params }: { params: { id: string } }) {
 
       <FriendsList refs={refs} />
 
+      <DrawerDialogDemo />
       <InviteFriendsButton />
     </main>
   );

@@ -1,6 +1,7 @@
 import { Task as ITask } from "@/lib/types";
 import Account from "@/modules/database/models/account";
 import Task from "@/modules/database/models/task";
+import bot from "@/modules/telegram/launch";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
@@ -23,23 +24,47 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
         .json({ success: false, message: "User not found" });
     }
 
+    const channel = task.subscribe;
     if (status === "claim") {
       if (user.completedTasks.includes(taskId)) {
-        return res.status(400).json({ message: "Task already completed" });
+        return res.status(400).json({ message: "Задание уже выполнено" });
       }
       if (user.claimingTasks.includes(taskId)) {
-        return res.status(400).json({ message: "Task already claimed" });
+        return res.status(400).json({ message: "Награда уже получена" });
       }
       await Account.updateOne(
         { id: Number(id) },
         { $push: { claimingTasks: taskId } }
       );
     } else if (status === "completed") {
-      if (user.completedTasks.includes(taskId)) {
-        return res.status(400).json({ message: "Task already completed" });
+      if (channel && channel !== "-") {
+        const chatMember = await bot.telegram.getChatMember(channel, id);
+        if (
+          chatMember.status !== "member" &&
+          chatMember.status !== "administrator" &&
+          chatMember.status !== "creator"
+        ) {
+          await Account.updateOne(
+            { id: Number(id) },
+            {
+              $pull: { claimingTasks: taskId, completedTasks: taskId },
+            }
+          );
+          return res.status(400).json({
+            success: false,
+            message: "Подписка на канал не обнаружена. Повторите попытку",
+          });
+        }
       }
+
+      if (user.completedTasks.includes(taskId)) {
+        return res.status(400).json({ message: "Задание уже выполнено" });
+      }
+
       if (!user.claimingTasks.includes(taskId)) {
-        return res.status(400).json({ message: "Task not claimed" });
+        return res
+          .status(400)
+          .json({ message: "Что то пошло не так.. Повторите попытку позже" });
       }
       const newBalance = user.balance + task.amount;
       await Account.updateOne(

@@ -9,13 +9,15 @@ interface CreateTaskProps {
   link: string;
   amount: number;
   partner: boolean;
+  subscribe: string | undefined;
 }
 
 const password = "123451";
 export default async function createTask(
   props: CreateTaskProps
 ): Promise<boolean> {
-  const { id, amount, description, link, logo, partner, title } = props;
+  const { id, amount, description, link, logo, partner, title, subscribe } =
+    props;
   if (props.password !== password) return false;
   const newTask = new Task({
     id,
@@ -25,6 +27,7 @@ export default async function createTask(
     type: "subscribe",
     link,
     amount,
+    subscribe,
     partner: partner,
   });
   try {

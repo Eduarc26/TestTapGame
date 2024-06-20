@@ -20,7 +20,7 @@ export default function DownloadApp() {
     <div
       className={cn(
         poppins.className,
-        "bg-black h-screen grid place-items-center"
+        "bg-background h-screen grid place-items-center"
       )}
     >
       <div className="flex flex-col space-y-5">

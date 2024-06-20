@@ -76,8 +76,8 @@ export function calculateBonus(referralCount: number): number {
 
 export const formattedBalance = (balance: number) => {
   return balance.toLocaleString("en-US", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: 3,
+    maximumFractionDigits: 3,
   });
 };
 

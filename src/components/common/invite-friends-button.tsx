@@ -1,11 +1,33 @@
 "use client";
-
-import { useEffect } from "react";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { useTelegram } from "../providers/telegram-provider";
+import { useSounds } from "@/hooks/use-sounds";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 const bot = process.env.NEXT_PUBLIC_BOT_USERNAME;
 export default function InviteFriendsButton() {
+  const [open, setOpen] = useState(false);
   const { user, webApp } = useTelegram();
+  const { playMenuAudio } = useSounds();
+  useEffect(() => {
+    if (!open && webApp) {
+      setTimeout(() => {
+        webApp.MainButton.show();
+      }, 300);
+    }
+  }, [open, webApp]);
 
   useEffect(() => {
     if (webApp && user) {
@@ -15,12 +37,9 @@ export default function InviteFriendsButton() {
       webApp.MainButton.textColor = "#000";
       webApp.MainButton.show();
       const handleMainButtonClick = () => {
-        const referralLink = `t.me/${bot}?start=${user.id}`;
-        const message = `Заходи в ${appName} и погнали зарабатывать вместе!🌟`;
-        const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
-          referralLink
-        )}&text=${encodeURIComponent(message)}`;
-        window.open(telegramUrl, "_blank");
+        playMenuAudio();
+        setOpen((prev) => !prev);
+        webApp.MainButton.hide();
       };
       window.Telegram.WebApp.MainButton.onClick(handleMainButtonClick);
 
@@ -32,5 +51,79 @@ export default function InviteFriendsButton() {
 
   if (!user || !webApp?.viewportHeight) return;
 
-  return null;
+  const sendLink = () => {
+    const referralLink = `t.me/${bot}?start=${user.id}`;
+    const message = `\nЗаходи в ${appName}, кликай и зарабатывай кристаллы для Brawl Stars! 💎`;
+    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
+      referralLink
+    )}&text=${encodeURIComponent(message)}`;
+    window.open(telegramUrl, "_blank");
+  };
+
+  const copyLink = async () => {
+    const referralLink = `t.me/${bot}?start=${user.id}`;
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      toast.success("Ссылка успешно скопирована");
+      setOpen(false);
+      console.log("Text copied to clipboard successfully!");
+    } catch (err) {
+      toast.error("Произошла ошибка. Повторите попытку позже");
+      setOpen(false);
+    }
+  };
+
+  return (
+    <>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetContent
+          side={"bottom"}
+          className="bg-primary p-0"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <SheetHeader>
+            <SheetTitle className="border-b border-border py-5">
+              Пригласите друга
+            </SheetTitle>
+            <SheetDescription className="p-4  flex flex-col gap-5 ">
+              <button
+                className="bg-border text-white rounded-md py-3.5 text-[17px] select-none"
+                onClick={sendLink}
+              >
+                Отправить
+              </button>
+              <button
+                className="bg-border text-white rounded-md py-3.5 text-[17px]"
+                onClick={copyLink}
+              >
+                Скопировать ссылку
+              </button>
+              <button
+                className="text-white rounded-md py-3.5 text-[17px] mb-5"
+                onClick={() => setOpen(false)}
+              >
+                Закрыть
+              </button>
+            </SheetDescription>
+          </SheetHeader>
+        </SheetContent>
+      </Sheet>
+    </>
+  );
+}
+
+function ProfileForm({ className }: React.ComponentProps<"form">) {
+  return (
+    <form className={cn("grid items-start gap-4", className)}>
+      <div className="grid gap-2">
+        <Label htmlFor="email">Email</Label>
+        <Input type="email" id="email" defaultValue="shadcn@example.com" />
+      </div>
+      <div className="grid gap-2">
+        <Label htmlFor="username">Username</Label>
+        <Input id="username" defaultValue="@shadcn" />
+      </div>
+      <Button type="submit">Save changes</Button>
+    </form>
+  );
 }

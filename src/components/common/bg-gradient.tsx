@@ -51,7 +51,7 @@ export default function BackgroundGradient() {
         if (now - lastClickTime >= 1000) {
           if (gradientState === "large") {
             setGradientState("medium");
-            setTimeout(() => setGradientState("light"), 500); // Переход на light через 500 мс
+            setTimeout(() => setGradientState("light"), 500);
           } else {
             setGradientState("light");
           }
@@ -66,22 +66,22 @@ export default function BackgroundGradient() {
   const gradientStyles = {
     light: {
       background:
-        "radial-gradient(circle, rgba(255, 215, 0, 1) 0%, rgba(0, 0, 0, 1) 63%, rgba(0, 0, 0, 1) 100%)",
+        "radial-gradient(circle, rgba(246, 186, 24, 1) 0%, rgba(0, 0, 0, 1) 63%, rgba(0, 0, 0, 1) 100%)",
     },
     medium: {
       background:
-        "radial-gradient(circle, rgba(255, 215, 0, 1) 0%, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 1) 100%)",
+        "radial-gradient(circle, rgba(246, 186, 24, 1) 0%, rgba(0, 0, 0, 1) 70%, rgba(0, 0, 0, 1) 100%)",
     },
     large: {
       background:
-        "radial-gradient(circle, rgba(255, 215, 0, 1) 0%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 1) 100%)",
+        "radial-gradient(circle, rgba(246, 186, 24, 1) 0%, rgba(0, 0, 0, 1) 80%, rgba(0, 0, 0, 1) 100%)",
     },
   };
 
   return (
     <AnimatePresence>
       <motion.div
-        className="gradient-bg h-screen -z-10 w-full absolute left-0 top-[14%]"
+        className="gradient-bg h-screen -z-10 w-full absolute left-0 top-[10%]"
         key={gradientState}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

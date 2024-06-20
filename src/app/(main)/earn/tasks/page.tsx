@@ -8,7 +8,10 @@ import React from "react";
 const base = process.env.BASE_URL!;
 
 async function getData() {
-  const res = await fetch(`${base}/api/task/list`);
+  const res = await fetch(`${base}/api/task/list`, {
+    cache: "force-cache",
+    next: { revalidate: 1200 },
+  });
   if (!res.ok) {
     throw new Error("Failed to fetch tasks");
   }

@@ -3,7 +3,7 @@ import { RefreshCw } from "lucide-react";
 
 export default function ErrorPage() {
   return (
-    <div className="bg-black h-screen grid place-items-center">
+    <div className="bg-background h-screen grid place-items-center">
       <div>
         <h1 className="text-2xl font-bold text-center">
           Извините, что-то <br />

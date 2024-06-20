@@ -34,7 +34,7 @@ export default async function createUser({
     id,
     name,
     invitedBy,
-    perClick: 1,
+    perClick: 0.001,
     avatarColor: getRandomColor(),
     clickLimit: 600,
     balance: invitedBy ? 10 : 0,

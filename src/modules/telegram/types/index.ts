@@ -11,6 +11,7 @@ interface SessionData extends Scenes.SceneSession {
     link?: string;
     reward?: string;
     partner?: boolean;
+    subscribe?: string;
   };
 }
 

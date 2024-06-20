@@ -51,7 +51,7 @@ export default function LevelUpBoostCard(props: LevelUpBoostCardProps) {
         </p>
         {maxLevel ? (
           <div className="text-neutral-500 text-left text-sm font-light">
-            Max level reached
+            Макс. уровень
           </div>
         ) : (
           <span className="flex items-center text-sm mt-0.5">

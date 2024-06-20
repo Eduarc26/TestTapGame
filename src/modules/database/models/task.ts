@@ -33,6 +33,10 @@ const taskSchema = new mongoose.Schema({
     default: false,
     required: true,
   },
+  subscribe: {
+    type: String,
+    required: false,
+  },
 });
 
 const Task = mongoose.models.Task || mongoose.model("Task", taskSchema);
