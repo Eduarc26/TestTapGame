@@ -1,7 +1,7 @@
 "use server";
 
+import { levelUpBoostsList } from "@/config/tasks";
 import Account from "@/modules/database/models/account";
-import { levelUpBoostsList } from "@/pages/api/user/use-boost";
 
 interface CreateUserProps {
   id: number;
@@ -23,8 +23,6 @@ const getRandomColor = () => {
   return avatars[randomIndex];
 };
 
-const a = levelUpBoostsList[""];
-
 export default async function createUser({
   id,
   invitedBy,
@@ -34,7 +32,7 @@ export default async function createUser({
     id,
     name,
     invitedBy,
-    perClick: 0.001,
+    perClick: levelUpBoostsList.click_points[1].amount,
     avatarColor: getRandomColor(),
     clickLimit: 600,
     balance: invitedBy ? 10 : 0,

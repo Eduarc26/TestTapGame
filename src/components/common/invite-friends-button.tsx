@@ -15,33 +15,34 @@ import { useTelegram } from "../providers/telegram-provider";
 import { useSounds } from "@/hooks/use-sounds";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 const appName = process.env.NEXT_PUBLIC_APP_NAME;
 const bot = process.env.NEXT_PUBLIC_BOT_USERNAME;
 export default function InviteFriendsButton() {
   const [open, setOpen] = useState(false);
   const { user, webApp } = useTelegram();
   const { playMenuAudio } = useSounds();
-  useEffect(() => {
-    if (!open && webApp) {
-      setTimeout(() => {
-        webApp.MainButton.show();
-      }, 300);
-    }
-  }, [open, webApp]);
+  // useEffect(() => {
+  //   if (!open && webApp) {
+  //     setTimeout(() => {
+  //       webApp.MainButton.show();
+  //     }, 300);
+  //   }
+  // }, [open, webApp]);
 
   useEffect(() => {
     if (webApp && user) {
-      webApp.MainButton.hide();
-      webApp.MainButton.color = "#FFF";
-      webApp.MainButton.setText("Пригласить друга 🔗");
-      webApp.MainButton.textColor = "#000";
-      webApp.MainButton.show();
+      // webApp.MainButton.hide();
+      // webApp.MainButton.color = "#FFF";
+      // webApp.MainButton.setText("Пригласить друга 🔗");
+      // webApp.MainButton.textColor = "#000";
+      // webApp.MainButton.show();
       const handleMainButtonClick = () => {
         playMenuAudio();
         setOpen((prev) => !prev);
         webApp.MainButton.hide();
       };
-      window.Telegram.WebApp.MainButton.onClick(handleMainButtonClick);
+      // window.Telegram.WebApp.MainButton.onClick(handleMainButtonClick);
 
       return () => {
         webApp.MainButton.hide();
@@ -62,12 +63,12 @@ export default function InviteFriendsButton() {
       window.scrollTo(0, overflow);
     }
 
-    return () => {
-      // Очистка стилей при размонтировании
-      document.body.style.marginTop = "";
-      document.body.style.height = "";
-      document.body.style.paddingBottom = "";
-    };
+    // return () => {
+    //   document.body.style.marginTop = `${overflow}px`;
+    //   document.body.style.height = window.innerHeight + overflow + "px";
+    //   document.body.style.paddingBottom = `${overflow}px`;
+    //   window.scrollTo(0, overflow);
+    // };
   }, [open]);
 
   if (!user || !webApp?.viewportHeight) return;
@@ -129,6 +130,21 @@ export default function InviteFriendsButton() {
           </SheetHeader>
         </SheetContent>
       </Sheet>
+
+      <motion.div
+        className="w-full fixed top-full h-[92px] bg-[#1a1a1a] left-0 -translate-y-full pt-2 px-4"
+        initial={{ y: "100%" }}
+        animate={{ y: open ? "100%" : "-92px" }}
+        exit={{ y: "100%" }}
+        transition={{ duration: 0.3 }}
+      >
+        <Button
+          onClick={() => setOpen(true)}
+          className="w-full bg-white text-black py-[25px] rounded-xl text-lg active:bg-white active:opacity-90"
+        >
+          Пригласить друга 🔗
+        </Button>
+      </motion.div>
     </>
   );
 }

@@ -55,8 +55,10 @@ export default function PrivateRoute({ children }: PropsWithChildren) {
     },
     [updateUser, getValue, setLastClicked, updateUserClicksleft]
   );
+
   useEffect(() => {
     if (!user || !webApp) return;
+    webApp.expand();
     webApp.setBackgroundColor("#000");
     webApp.setHeaderColor("#000");
     getUserData(user.id);

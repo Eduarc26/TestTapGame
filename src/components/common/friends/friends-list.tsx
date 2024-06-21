@@ -10,9 +10,9 @@ interface FriendsListProps {
 
 export default function FriendsList({ refs }: FriendsListProps) {
   const friendsAmount = refs.length;
-  if (friendsAmount === 0) return;
+  if (friendsAmount === 0) return null;
   return (
-    <div>
+    <div className="pb-24">
       <p className="font-medium pt-1.5">
         {friendsAmount} {getFriendWord(friendsAmount)}
       </p>

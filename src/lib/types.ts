@@ -83,6 +83,8 @@ export interface IWebApp {
     ) => void;
     getKeys: (callback: (error: Error | null, keys: string[]) => void) => void;
   };
+  viewportChanged: any;
+  // ) => void;
 }
 
 export interface Referals {
@@ -145,4 +147,14 @@ export interface Task {
   amount: number;
   partner: boolean;
   subscribe: string | undefined;
+}
+
+interface ILevelUpBoostDetails {
+  cost: number;
+  amount: number;
+}
+
+export interface LevelUpBoost {
+  [level: number]: ILevelUpBoostDetails;
+  maxLevel: number;
 }

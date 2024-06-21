@@ -66,7 +66,7 @@ export default function BackgroundGradient() {
   const gradientStyles = {
     light: {
       background:
-        "radial-gradient(circle, rgba(246, 186, 24, 1) 0%, rgba(0, 0, 0, 1) 63%, rgba(0, 0, 0, 1) 100%)",
+        "radial-gradient(circle, rgba(246, 186, 24, 1) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 1) 100%)",
     },
     medium: {
       background:
@@ -81,7 +81,7 @@ export default function BackgroundGradient() {
   return (
     <AnimatePresence>
       <motion.div
-        className="gradient-bg h-screen -z-10 w-full absolute left-0 top-[12%]"
+        className="h-full -z-10 w-full absolute left-0 top-[10%] flex items-center justify-center"
         key={gradientState}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

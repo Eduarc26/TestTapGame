@@ -4,18 +4,21 @@ import ClickProgressButton from "./farm-button/click-progress-button";
 import useUserStore from "@/storage/user-store";
 import { useTelegram } from "../providers/telegram-provider";
 import BottomNavigation from "./bottom-navigation";
+import { useEffect, useState } from "react";
 
 export default function ClickProgress() {
   const { user, clicksLeft } = useUserStore();
   const { webApp } = useTelegram();
-  if (!webApp) return;
 
+  if (!webApp) return null; // -translate-y-[168px]
   return (
     <div
-      className="mt-12 px-6 fixed bg-transparent left-0 z-50 w-full -translate-y-[168px] pt-2"
-      style={{
-        top: webApp.viewportHeight,
-      }}
+      className="mt-12 px-6 fixed bg-transparent left-0 z-50 w-full pt-2 top-full -translate-y-[200px]"
+      style={
+        {
+          // top: webApp.viewportStableHeight - 168,
+        }
+      }
     >
       <div className="flex gap-10 items-center">
         <div className="flex items-center space-x-1 w-16">

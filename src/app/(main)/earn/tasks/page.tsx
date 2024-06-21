@@ -23,7 +23,7 @@ export default async function TasksPage() {
   if (!result.success) return <ErrorPage />;
   const tasks = result.data;
   return (
-    <main className="pl-4">
+    <main className="pl-4 overflow-y-scroll h-screen">
       <BackButton />
       <div className="pt-4 pr-4">
         <TopNavigation active="tasks" />
