@@ -2,10 +2,14 @@ import getUser from "@/actions/get-user";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { id } = req.body;
   try {
-    if (!id || !Number(id))
-      return res.status(500).json({ message: "Oops.. Something went wrong" });
+    const headers = req.headers;
+    const headersId = headers["x-user-id"];
+    const headersIp = headers["x-forwarded-for"];
+    if (!headersId || isNaN(Number(headersId))) {
+      return res.status(400).json({ message: "Invalid or missing user ID" });
+    }
+    const id = Number(headersId);
     const user: any = await getUser(Number(id));
     if (!user) res.status(404).json({ user: null, success: false });
     const now = new Date();
@@ -24,10 +28,16 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       }
     });
 
+    if (headersIp && user.ip !== headersIp) {
+      user.ip = headersIp;
+      updatesMade = true;
+    }
+
     if (updatesMade) {
       await user.save();
     }
-    res.status(200).json({ user: user, success: true });
+    const { ip, ...userWithoutIp } = user.toObject();
+    res.status(200).json({ user: userWithoutIp, success: true });
   } catch (error) {
     return res.status(500).json({ message: "Oops.. Something went wrong" });
   }

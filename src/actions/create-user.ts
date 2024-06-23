@@ -7,6 +7,7 @@ interface CreateUserProps {
   id: number;
   name: string;
   invitedBy: number | null;
+  username?: string;
 }
 const avatars = [
   "#ECB176",
@@ -27,11 +28,13 @@ export default async function createUser({
   id,
   invitedBy,
   name,
+  username = "",
 }: CreateUserProps) {
   const newAccount = new Account({
     id,
     name,
     invitedBy,
+    username: username,
     perClick: levelUpBoostsList.click_points[1].amount,
     avatarColor: getRandomColor(),
     clickLimit: 600,

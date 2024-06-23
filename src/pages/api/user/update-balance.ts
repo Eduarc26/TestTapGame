@@ -2,23 +2,30 @@ import Account from "@/modules/database/models/account";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { id, lastClicked } = req.body;
   try {
-    if (!id || !Number(id) || !lastClicked) {
-      return res.status(400).json({ message: "Invalid input data" });
+    const headers = req.headers;
+    const headersId = headers["x-user-id"];
+    const headersClicksLeft = headers["x-clicks-left"];
+    if (!headersId || isNaN(Number(headersId))) {
+      return res.status(400).json({ message: "Invalid or missing user ID" });
     }
+    const id = Number(headersId);
+    if (!headersClicksLeft || isNaN(Number(headersClicksLeft))) {
+      return res.status(400).json({ message: "click limit has been reached" });
+    }
+    const clicksLeft = Number(headersClicksLeft);
 
-    // Найти пользователя по id
-    const user = await Account.findOne({ id: Number(id) });
+    const user = await Account.findOne({ id: id });
     if (!user) {
       return res
         .status(404)
         .json({ success: false, message: "User not found" });
     }
+    if (clicksLeft - 1 <= 0) {
+      return res.status(400).json({ message: "click limit has been reached" });
+    }
 
-    // Обновить баланс и lastClicked
-    user.balance += user.perClick; // Прибавить к текущему балансу значение 1
-    user.lastClicked = lastClicked;
+    user.balance += user.perClick;
 
     // Сохранить изменения
     const updatedUser = await user.save();

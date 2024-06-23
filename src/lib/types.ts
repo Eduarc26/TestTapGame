@@ -127,10 +127,13 @@ export interface IUser {
   claimingTasks: number[];
   completedTasks: number[];
   bonusBalance: number;
+  username?: string;
   registeredAt: Date;
   dailyBoosts: IDailyBoost[];
   levelUpBoosts: ILevelUpBoost[];
   energyRecoveryPerSecond: number;
+  initData?: string;
+  ip?: string;
 }
 
 export type TaskType = "subscribe";

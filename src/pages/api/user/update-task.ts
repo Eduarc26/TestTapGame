@@ -5,12 +5,18 @@ import bot from "@/modules/telegram/launch";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { id, taskId, status } = req.body;
+  const { taskId, status } = req.body;
 
   try {
-    if (!id || isNaN(Number(id)) || !taskId || isNaN(Number(taskId))) {
-      return res.status(400).json({ message: "Invalid input data" });
+    if (!taskId || isNaN(Number(taskId))) {
+      return res.status(400).json({ message: "Invalid data" });
     }
+    const headers = req.headers;
+    const headersId = headers["x-user-id"];
+    if (!headersId || isNaN(Number(headersId))) {
+      return res.status(400).json({ message: "Invalid or missing user ID" });
+    }
+    const id = Number(headersId);
 
     const task: ITask | null = await Task.findOne({ id: Number(taskId) });
     if (!task) {

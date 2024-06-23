@@ -5,21 +5,33 @@ import start from "./commands/start";
 import { BotContext } from "./types";
 import { createTaskScene } from "./scenes/create-task";
 import { findTaskScene } from "./scenes/find-task";
+import { broadcast } from "./scenes/broadcast";
 import deleteTask from "./commands/delete-task";
 import adminAccess from "./middleware/admin-access";
 import help from "./commands/help";
-
 import registerStats from "./commands/register-stats";
+import { findUserScene } from "./scenes/find-user";
+import { updateBalance } from "./scenes/update-balance";
 let botLaunched = false;
 
 const bot = new Telegraf<BotContext>(process.env.TOKEN!);
 
-const stage = new Scenes.Stage<BotContext>([createTaskScene, findTaskScene]);
+const stage = new Scenes.Stage<BotContext>([
+  createTaskScene,
+  findTaskScene,
+  broadcast,
+  findUserScene,
+  updateBalance,
+]);
 bot.use(session());
 bot.use(stage.middleware());
 
 bot.command("createTask", adminAccess, (ctx) => ctx.scene.enter("createTask"));
 bot.command("findTask", adminAccess, (ctx) => ctx.scene.enter("findTask"));
+bot.command("findUser", adminAccess, (ctx) => ctx.scene.enter("findUser"));
+bot.command("updateBalance", adminAccess, (ctx) =>
+  ctx.scene.enter("updateBalance")
+);
 
 bot.start(async (ctx) => await start(ctx, ctx.message.text));
 bot.command(
@@ -33,24 +45,10 @@ bot.command(
   adminAccess,
   async (ctx) => await registerStats(ctx)
 );
-bot.help(adminAccess, async (ctx) => await help(ctx));
-bot.command("test", async (ctx) => {
-  const channel = "@publlic_channell";
-  const chatMember = await ctx.telegram.getChatMember(channel, ctx.from.id);
-  console.log(chatMember.status);
-  if (
-    chatMember.status !== "member" &&
-    chatMember.status !== "administrator" &&
-    chatMember.status !== "creator"
-  ) {
-    await ctx.reply(`Привет, подпишись на канал - ${channel}`);
-    return;
-  }
-  await ctx.reply("Привет, ты подписан на канал");
-});
 
-bot.on("sticker", async (ctx) => await ctx.reply("👍"));
-bot.hears("hi", async (ctx) => await ctx.reply("Hey there"));
+bot.command("broadcast", adminAccess, (ctx) => ctx.scene.enter("broadcast"));
+
+bot.help(adminAccess, async (ctx) => await help(ctx));
 
 export async function botRun() {
   if (botLaunched) return;

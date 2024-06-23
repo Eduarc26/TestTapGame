@@ -40,10 +40,10 @@ export default function useTask(task: Task) {
   }, [user, task.id]);
 
   const setTaskClaiming = async (taskId: number) => {
-    if (!user) return updateTaskStatus("open");
+    if (!user || !user.initData) return updateTaskStatus("open");
     try {
       updateTaskStatus("pending");
-      await User.updateTaskStatus(user.id, taskId, "claim");
+      await User.updateTaskStatus(user.initData, taskId, "claim");
       await delayPromise(11000);
       updateTaskArrays(taskId, "claim");
       updateTaskStatus("claim");
@@ -59,10 +59,14 @@ export default function useTask(task: Task) {
     }
   };
   const setTaskCompleted = async (taskId: number) => {
-    if (!user) return updateTaskStatus("claim");
+    if (!user || !user.initData) return updateTaskStatus("claim");
     try {
       updateTaskStatus("claim-loading");
-      const data = await User.updateTaskStatus(user.id, taskId, "completed");
+      const data = await User.updateTaskStatus(
+        user.initData,
+        taskId,
+        "completed"
+      );
       if (!data.success || !data.amount)
         throw new Error("Oops.. Something went wrong");
       await delayPromise(3000);

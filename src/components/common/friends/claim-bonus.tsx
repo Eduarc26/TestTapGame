@@ -40,7 +40,7 @@ export default function ClaimBonus() {
     try {
       const bonus = user.bonusBalance;
       setClaiming(true);
-      const data = await User.swapBonusBalance(user.id);
+      const data = await User.swapBonusBalance(webApp.initData ?? "");
       if (!data.success || !data.user)
         throw new Error("Что то пошло не так. Повторите попытку позже");
       updateUser(data.user);

@@ -6,13 +6,26 @@ import { type Context } from "telegraf";
 const baseUrl = process.env.BASE_URL!;
 const token = process.env.TOKEN!;
 const appName = process.env.NEXT_PUBLIC_APP_NAME!;
+const channel = process.env.MAIN_CHANNEL!;
 const webAppButton = [
   [
     {
-      text: "🚀 Start earn more",
+      text: "Играй в 1 клик 🚀",
       web_app: {
         url: baseUrl,
       },
+    },
+  ],
+  [
+    {
+      text: "Подписаться на канал",
+      url: channel,
+    },
+  ],
+  [
+    {
+      text: "Политика конфиденциальности",
+      url: `${baseUrl}/privacy-policy`,
     },
   ],
 ];
@@ -21,7 +34,7 @@ const webAppButtonRefs = (id: number) => {
   return [
     [
       {
-        text: "🌼 Explore your frens",
+        text: "🌼 Список ваших друзей",
         web_app: {
           url: `${baseUrl}/earn/friends/${id}`,
         },
@@ -60,6 +73,7 @@ export default async function start(ctx: Context, message: string) {
         id: ctx.from.id,
         invitedBy: null,
         name: ctx.from.first_name || ctx.from.username || "",
+        username: ctx.from.username || "",
       });
       return await ctx.reply(
         `👋 <b>Добро пожаловать, ${username || firstName}!</b>`,
@@ -77,6 +91,7 @@ export default async function start(ctx: Context, message: string) {
         id: ctx.from.id,
         invitedBy: null,
         name: ctx.from.first_name || ctx.from.username || "",
+        username: ctx.from.username || "",
       });
       return await ctx.reply(
         `👋 <b>Добро пожаловать, ${username || firstName}!</b>`,
@@ -92,6 +107,7 @@ export default async function start(ctx: Context, message: string) {
       id: ctx.from.id,
       invitedBy: invitedBy,
       name: ctx.from.first_name || ctx.from.username || "",
+      username: ctx.from.username || "",
     });
 
     await ctx.reply(`👋 <b>Добро пожаловать, ${username || firstName}!</b>`, {

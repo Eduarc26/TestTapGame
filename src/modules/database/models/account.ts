@@ -36,6 +36,10 @@ const accountSchema = new mongoose.Schema<IUser>({
     type: Number,
     required: true,
   },
+  username: {
+    type: String,
+    default: "",
+  },
   invitedBy: {
     type: Number,
     required: false,
@@ -68,6 +72,10 @@ const accountSchema = new mongoose.Schema<IUser>({
     type: Number,
     default: 0,
     required: true,
+  },
+  ip: {
+    type: String,
+    required: false,
   },
   registeredAt: { type: Date, default: Date.now },
   dailyBoosts: { type: [dailyBoostSchema], default: [] },

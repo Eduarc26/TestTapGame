@@ -5,13 +5,13 @@ export default async function swapBonusBalance(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { id } = req.body;
-
   try {
-    if (!id || isNaN(Number(id))) {
-      return res.status(400).json({ message: "Invalid user ID" });
+    const headers = req.headers;
+    const headersId = headers["x-user-id"];
+    if (!headersId || isNaN(Number(headersId))) {
+      return res.status(400).json({ message: "Invalid or missing user ID" });
     }
-
+    const id = Number(headersId);
     const user = await Account.findOne({ id: Number(id) });
 
     if (!user) {

@@ -88,7 +88,6 @@ export default function InviteFriendsButton() {
       await navigator.clipboard.writeText(referralLink);
       toast.success("Ссылка успешно скопирована");
       setOpen(false);
-      console.log("Text copied to clipboard successfully!");
     } catch (err) {
       toast.error("Произошла ошибка. Повторите попытку позже");
       setOpen(false);

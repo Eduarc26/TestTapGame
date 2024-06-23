@@ -4,6 +4,9 @@ interface SessionData extends Scenes.SceneSession {
   findTask?: {
     taskParam?: string;
   };
+  findUser?: {
+    param?: string;
+  };
   createTask?: {
     title?: string;
     description?: string;
@@ -12,6 +15,14 @@ interface SessionData extends Scenes.SceneSession {
     reward?: string;
     partner?: boolean;
     subscribe?: string;
+  };
+  broadcast?: {
+    messageId?: number;
+    chatId?: number;
+  };
+  updateBalance?: {
+    id?: number;
+    balance?: string;
   };
 }
 

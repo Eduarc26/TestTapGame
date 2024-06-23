@@ -1,18 +1,19 @@
 import getUser from "@/actions/get-user";
 import { levelUpBoostsList } from "@/config/tasks";
-import { IUser, IDailyBoost, ILevelUpBoost } from "@/lib/types";
+import { IDailyBoost, ILevelUpBoost } from "@/lib/types";
 import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-  const { id, boostType, boostKey } = req.body;
+  const { boostType, boostKey } = req.body;
   try {
-    if (
-      !id ||
-      isNaN(Number(id)) ||
-      (boostType !== "level-up" && boostType !== "daily")
-    )
+    if (boostType !== "level-up" && boostType !== "daily")
       return res.status(500).json({ message: "Oops.. Something went wrong" });
-
+    const headers = req.headers;
+    const headersId = headers["x-user-id"];
+    if (!headersId || isNaN(Number(headersId))) {
+      return res.status(400).json({ message: "Invalid or missing user ID" });
+    }
+    const id = Number(headersId);
     const user: any = await getUser(Number(id));
 
     if (!user || typeof user === "boolean") {
@@ -82,7 +83,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       const cost = boostDetails[nextLevel].cost;
       const currentCost = boostDetails[currentLevel].cost;
       const amount = boostDetails[nextLevel].amount;
-      console.log(user.balance, cost);
       if (user.balance < currentCost) {
         return res
           .status(400)
@@ -110,7 +110,6 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       });
     }
 
-    console.log(user, id, boostType, boostKey);
     res.status(200).json({ data: null, success: true });
   } catch (error) {
     return res.status(500).json({ message: "Oops.. Something went wrong" });

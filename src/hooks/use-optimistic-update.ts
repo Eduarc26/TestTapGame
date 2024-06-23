@@ -1,17 +1,23 @@
 import User from "@/dto/user";
 import useUserStore from "@/storage/user-store";
-import useEnergyRecovery from "./use-energy-recovery";
+import useLocalStorage from "./use-local-storage";
 
 export default function useOptimistic() {
-  const { user, balanceInc, balanceDec, clicksLeft, updateUserClicksleft } =
-    useUserStore();
-
+  const { user, balanceInc, balanceDec } = useUserStore();
+  const { getValue } = useLocalStorage();
   const optimisticBalanceUpdate = async () => {
-    if (!user) return;
+    if (!user || !user.initData) return;
     const now = new Date();
     balanceInc(now);
     try {
-      await User.updateBalance(user.id, user.balance + user.perClick, now);
+      let clicksLeft;
+      getValue({
+        key: `${user.id}`,
+        callback: (data) => {
+          clicksLeft = data?.clicksLeft;
+        },
+      });
+      await User.updateBalance(user.initData, clicksLeft);
     } catch (error) {
       balanceDec();
       console.error("Ошибка обновления баланса:", error);

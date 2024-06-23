@@ -129,7 +129,6 @@ createTaskScene.action("partner_yes", async (ctx) => {
   const amountMessage = `<b>Награда:</b> <code>${amount} ${currency}</code>`;
   const partnerMessage = `<b>Задание от партнера:</b> <code>Да</code>`;
   const subscribeMessage = `<b>Проверка подписки:</b> <code>${subscribe}</code>`;
-  console.log(subscribe);
   const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${subscribeMessage}\n${partnerMessage}\n\n${links}`;
   await ctx.reply(message, {
     parse_mode: "HTML",
@@ -180,7 +179,6 @@ createTaskScene.action("partner_no", async (ctx) => {
   const amountMessage = `<b>Награда:</b> <code>${amount} ${currency}</code>`;
   const partnerMessage = `<b>Задание от партнера:</b> <code>Да</code>`;
   const subscribeMessage = `<b>Проверка подписки:</b> <code>${subscribe}</code>`;
-  console.log(subscribe);
   const message = `<b>Подтвердите создание</b>\n\n<b>Заголовок:</b> <code>${title}</code>\n${descriptionMessage}\n${amountMessage}\n${subscribeMessage}\n${partnerMessage}\n\n${links}`;
   await ctx.reply(message, {
     parse_mode: "HTML",
